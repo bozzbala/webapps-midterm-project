@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="main-page">
+        <div class="container">
+            <h1 class="h1">Tasks</h1>
+            <div class="list">
+            {% for x in list %}
+                <div class="task-item{% if x.completed %} done{% endif %}">
+                    <a href="/task/{{x.id}}" class="item">{{ x.title }}</a>
+                    <div class="controls">
+                        <a href="/task/{{x.id}}/edit" class="edit-btn">Edit</a>
+                        <a href="/task/{{x.id}}/delete" class="delete-btn">Delete</a>
+                        <form class="form" method="post" action="/task/{{x.id}}/complete" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="complete-btn">Mark as Completed</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        <form class="form-crud" action="{% url 'create_task' %}" method="post">
+            {% csrf_token %}
+            <div>
+                <input type="text" class="input" placeholder="Title" name="title" required/>
+            </div>
+            <div>
+                <textarea class="textarea" name="description" placeholder="Description" required></textarea>
+            </div>
+            <button type="submit" class="btn">Create New Task</button>
+        </form>
+    </div>
+</body>
+</html>
